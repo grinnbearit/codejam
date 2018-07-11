@@ -38,36 +38,35 @@
                (inc num-switches))))))
 
 
-(defn parse-chunk
-  "returns a parsed list of strings and the remaining seq of lines"
+(defn parse-chunks
+  "returns a lazy-seq of vecs of strings representing a chunk"
   [lines]
-  (let [num-strings (Integer/parseInt (first lines))]
-    [(take num-strings (rest lines))
-     (drop num-strings (rest lines))]))
+  (lazy-seq
+   (when-let [s (seq lines)]
+     (let [num-strings (Integer/parseInt (first lines))]
+       (cons (take num-strings (rest lines))
+             (parse-chunks (drop num-strings (rest lines))))))))
 
 
 (defn read-input
   [f]
-  (loop [problems-acc []
-         remaining-lines (rest (line-seq (io/reader f)))]
-    (if (empty? remaining-lines)
-      problems-acc
-      (let [[engines we-lines] (parse-chunk remaining-lines)
-            [queries wq-lines] (parse-chunk we-lines)]
-        (recur (conj problems-acc [(set engines) queries])
-               wq-lines)))))
+  (->> (line-seq (io/reader f))
+       (drop 1)
+       (parse-chunks)
+       (partition 2)))
 
 
 (defn solve
   [problems]
-  (letfn [(reducer [acc [engines queries]]
-            (conj acc (count-switches engines queries)))]
-    (reduce reducer [] problems)))
+  (letfn [(mapper [[engines queries]]
+            (count-switches (set engines) queries))]
+    (map mapper problems)))
 
 
 (defn write-output
   [f solutions]
-  (letfn [(reducer [acc [idx sol]]
-            (conj acc (format "Case #%d: %d" idx sol)))]
-    (->> (str/join "\n" (reduce reducer [] (map list (iterate inc 1) solutions)))
+  (letfn [(formatter [idx sol]
+            (format "Case #%d: %d" idx sol))]
+    (->> (map formatter (drop 1 (range)) solutions)
+         (str/join "\n")
          (spit f))))

@@ -40,13 +40,13 @@
 
 
 (facts
- "parse chunk"
+ "parse chunks"
 
- (parse-chunk ["2" "apple" "banana" "0"])
- => [["apple" "banana"] ["0"]]
+ (parse-chunks ["2" "apple" "banana" "0" "1" "mango"])
+ => [["apple" "banana"] [] ["mango"]]
 
- (parse-chunk ["0"])
- => [[] []])
+ (parse-chunks ["0"])
+ => [[]])
 
 
 (facts
@@ -68,9 +68,9 @@
 (facts
  "solve"
 
- (solve [[#{:a :b}
+ (solve [[[:a :b]
           [:a :a]]
-         [#{:a :b}
+         [[:a :b]
           [:a :a :b :a :a]]])
  => [0 2])
 
