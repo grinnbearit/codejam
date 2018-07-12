@@ -20,7 +20,11 @@
 
  (find-remaining-queries #{:a :b}
                          [:a :a :b :a :a])
- => [:b :a :a])
+ => [:b :a :a]
+
+ (find-remaining-queries #{:a}
+                         [:b :a :a])
+ => [:a :a])
 
 
 (facts
@@ -61,8 +65,8 @@
                                        "apple"
                                        "1"
                                        "banana"])))
- => [[#{"apple" "banana"} []]
-     [#{"apple"} ["banana"]]])
+ => [[["apple" "banana"] []]
+     [["apple"] ["banana"]]])
 
 
 (facts
