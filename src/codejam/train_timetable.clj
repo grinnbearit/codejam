@@ -11,35 +11,35 @@
   (loop [num-a 0
          num-b 0
          schedule (:schedule train-info)
-         station-a (priority-queue first)
-         station-b (priority-queue first)]
+         station-a (priority-queue)
+         station-b (priority-queue)]
     (if (empty? schedule)
       [num-a num-b]
       (let [[start end train] (first schedule)]
         (if (= train :a)
           (if (or (empty? station-a)
-                  (< start (first (peek station-a))))
+                  (< start (peek station-a)))
             (recur (inc num-a)
                    num-b
                    (rest schedule)
                    station-a
-                   (conj station-b [(+ end (:turnaround-time train-info))]))
+                   (conj station-b (+ end (:turnaround-time train-info))))
             (recur num-a
                    num-b
                    (rest schedule)
                    (pop station-a)
-                   (conj station-b [(+ end (:turnaround-time train-info))])))
+                   (conj station-b (+ end (:turnaround-time train-info)))))
           (if (or (empty? station-b)
-                  (< start (first (peek station-b))))
+                  (< start (peek station-b)))
             (recur num-a
                    (inc num-b)
                    (rest schedule)
-                   (conj station-a [(+ end (:turnaround-time train-info))])
+                   (conj station-a (+ end (:turnaround-time train-info)))
                    station-b)
             (recur num-a
                    num-b
                    (rest schedule)
-                   (conj station-a [(+ end (:turnaround-time train-info))])
+                   (conj station-a (+ end (:turnaround-time train-info)))
                    (pop station-b))))))))
 
 
