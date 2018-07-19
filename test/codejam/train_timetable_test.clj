@@ -9,18 +9,18 @@
 (facts
  "count trains"
 
- (count-trains {:turnaround-time 5
-                :schedule [[540 630 :b]
-                           [540 720 :a]
-                           [600 780 :a]
-                           [660 750 :a]
-                           [722 900 :b]]})
+ (count-trains [[540 630 :b]
+                [540 720 :a]
+                [600 780 :a]
+                [660 750 :a]
+                [722 900 :b]]
+               5)
  => [2 2]
 
 
- (count-trains {:turnaround-time 2
-                :schedule [[540 541 :a]
-                           [720 722 :a]]})
+ (count-trains [[540 541 :a]
+                [720 722 :a]]
+               2)
  => [2 0])
 
 
@@ -86,6 +86,22 @@
      {:turnaround-time 2
       :schedule [[540 541 :a]
                  [720 722 :a]]}])
+
+
+(facts
+ "solve"
+
+ (solve [{:turnaround-time 5
+          :schedule [[540 630 :b]
+                     [540 720 :a]
+                     [600 780 :a]
+                     [660 750 :a]
+                     [722 900 :b]]}
+         {:turnaround-time 2
+          :schedule [[540 541 :a]
+                     [720 722 :a]]}])
+ => [[2 2]
+     [2 0]])
 
 
 (facts

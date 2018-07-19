@@ -7,40 +7,36 @@
 
 
 (defn count-trains
-  [train-info]
-  (loop [num-a 0
-         num-b 0
-         schedule (:schedule train-info)
-         station-a (priority-queue)
-         station-b (priority-queue)]
-    (if (empty? schedule)
-      [num-a num-b]
-      (let [[start end train] (first schedule)]
-        (if (= train :a)
-          (if (or (empty? station-a)
-                  (< start (peek station-a)))
-            (recur (inc num-a)
-                   num-b
-                   (rest schedule)
-                   station-a
-                   (conj station-b (+ end (:turnaround-time train-info))))
-            (recur num-a
-                   num-b
-                   (rest schedule)
-                   (pop station-a)
-                   (conj station-b (+ end (:turnaround-time train-info)))))
-          (if (or (empty? station-b)
-                  (< start (peek station-b)))
-            (recur num-a
-                   (inc num-b)
-                   (rest schedule)
-                   (conj station-a (+ end (:turnaround-time train-info)))
-                   station-b)
-            (recur num-a
-                   num-b
-                   (rest schedule)
-                   (conj station-a (+ end (:turnaround-time train-info)))
-                   (pop station-b))))))))
+  [schedule turnaround-time]
+  (letfn [(reducer [[station-a station-b num-a num-b]
+                    [start end train]]
+            (if (= :a train)
+              (if (or (empty? station-a)
+                      (< start (peek station-a)))
+                [station-a
+                 (conj station-b (+ end turnaround-time))
+                 (inc num-a)
+                 num-b]
+                [(pop station-a)
+                 (conj station-b (+ end turnaround-time))
+                 num-a
+                 num-b])
+              (if (or (empty? station-b)
+                      (< start (peek station-b)))
+                [(conj station-a (+ end turnaround-time))
+                 station-b
+                 num-a
+                 (inc num-b)]
+                [(conj station-a (+ end turnaround-time))
+                 (pop station-b)
+                 num-a
+                 num-b])))]
+
+    (->> (reduce reducer [(priority-queue)
+                          (priority-queue)
+                          0 0]
+                 schedule)
+         (drop 2))))
 
 
 (defn timestamp->minutes
@@ -87,10 +83,19 @@
        (parse-chunks)))
 
 
+(defn solve
+  [problems]
+  (letfn [(mapper [{:keys [schedule turnaround-time]}]
+            (count-trains schedule turnaround-time))]
+
+    (map mapper problems)))
+
+
 (defn write-output
   [f solutions]
   (letfn [(formatter [idx [num-a num-b]]
             (format "Case #%d: %d %d" idx num-a num-b))]
+
     (->> (map formatter (drop 1 (range)) solutions)
          (str/join "\n")
          (spit f))))
