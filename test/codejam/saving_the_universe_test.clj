@@ -6,84 +6,77 @@
            java.io.StringWriter))
 
 
-
 (facts
  "find remaining queries"
 
- (find-remaining-queries #{:a :b}
-                         [])
+ (find-remaining-queries #{"Yeehaw" "NSM" "Dont Ask" "B9" "Googol"}
+                         ["Yeehaw" "Yeehaw" "Googol" "B9" "Googol" "NSM" "B9" "NSM" "Dont Ask" "Googol"])
+ => ["Dont Ask" "Googol"]
+
+ (find-remaining-queries #{"Yeehaw" "NSM" "B9" "Googol"}
+                         ["Dont Ask" "Googol"])
  => []
 
- (find-remaining-queries #{:a :b}
-                         [:a :a])
- => []
-
- (find-remaining-queries #{:a :b}
-                         [:a :a :b :a :a])
- => [:b :a :a]
-
- (find-remaining-queries #{:a}
-                         [:b :a :a])
- => [:a :a])
+ (find-remaining-queries #{"Yeehaw" "NSM" "Dont Ask" "B9" "Googol"}
+                         ["Googol" "Dont Ask" "NSM" "NSM" "Yeehaw" "Yeehaw" "Googol"])
+ => [])
 
 
 (facts
  "count switches"
 
- (count-switches #{:a :b}
-                 [])
- => 0
+ (count-switches #{"Yeehaw" "NSM" "Dont Ask" "B9" "Googol"}
+                 ["Yeehaw" "Yeehaw" "Googol" "B9" "Googol" "NSM" "B9" "NSM" "Dont Ask" "Googol"])
+ => 1
 
- (count-switches #{:a :b}
-                 [:a :a])
- => 0
-
- (count-switches #{:a :b}
-                 [:a :a :b :a :a])
- => 2)
+ (count-switches #{"Yeehaw" "NSM" "Dont Ask" "B9" "Googol"}
+                 ["Googol" "Dont Ask" "NSM" "NSM" "Yeehaw" "Yeehaw" "Googol"])
+ => 0)
 
 
 (facts
  "parse chunks"
 
- (parse-chunks ["2" "apple" "banana" "0" "1" "mango"])
- => [["apple" "banana"] [] ["mango"]]
-
- (parse-chunks ["0"])
- => [[]])
+ (parse-chunks ["5" "Yeehaw" "NSM" "Dont Ask" "B9" "Googol"
+                "10" "Yeehaw" "Yeehaw" "Googol" "B9" "Googol" "NSM" "B9" "NSM" "Dont Ask" "Googol"
+                "5" "Yeehaw" "NSM" "Dont Ask" "B9" "Googol"
+                "7" "Googol" "Dont Ask" "NSM" "NSM" "Yeehaw" "Yeehaw" "Googol"])
+ => [["Yeehaw" "NSM" "Dont Ask" "B9" "Googol"]
+     ["Yeehaw" "Yeehaw" "Googol" "B9" "Googol" "NSM" "B9" "NSM" "Dont Ask" "Googol"]
+     ["Yeehaw" "NSM" "Dont Ask" "B9" "Googol"]
+     ["Googol" "Dont Ask" "NSM" "NSM" "Yeehaw" "Yeehaw" "Googol"]])
 
 
 (facts
  "read input"
 
- (read-input (StringReader. (str/join "\n"
-                                      ["2"
-                                       "2"
-                                       "apple" "banana"
-                                       "0"
-                                       "1"
-                                       "apple"
-                                       "1"
-                                       "banana"])))
- => [[["apple" "banana"] []]
-     [["apple"] ["banana"]]])
+ (read-input (StringReader. (->> ["2"
+                                  "5" "Yeehaw" "NSM" "Dont Ask" "B9" "Googol"
+                                  "10" "Yeehaw" "Yeehaw" "Googol" "B9" "Googol" "NSM" "B9" "NSM" "Dont Ask" "Googol"
+                                  "5" "Yeehaw" "NSM" "Dont Ask" "B9" "Googol"
+                                  "7" "Googol" "Dont Ask" "NSM" "NSM" "Yeehaw" "Yeehaw" "Googol"]
+                                 (str/join "\n"))))
+ => [[["Yeehaw" "NSM" "Dont Ask" "B9" "Googol"]
+      ["Yeehaw" "Yeehaw" "Googol" "B9" "Googol" "NSM" "B9" "NSM" "Dont Ask" "Googol"]]
+     [["Yeehaw" "NSM" "Dont Ask" "B9" "Googol"]
+      ["Googol" "Dont Ask" "NSM" "NSM" "Yeehaw" "Yeehaw" "Googol"]]])
 
 
 (facts
  "solve"
 
- (solve [[[:a :b]
-          [:a :a]]
-         [[:a :b]
-          [:a :a :b :a :a]]])
- => [0 2])
+ (solve [[["Yeehaw" "NSM" "Dont Ask" "B9" "Googol"]
+          ["Yeehaw" "Yeehaw" "Googol" "B9" "Googol" "NSM" "B9" "NSM" "Dont Ask" "Googol"]]
+         [["Yeehaw" "NSM" "Dont Ask" "B9" "Googol"]
+          ["Googol" "Dont Ask" "NSM" "NSM" "Yeehaw" "Yeehaw" "Googol"]]])
+ => [1 0])
 
 
 (facts
  "write output"
 
  (let [w (java.io.StringWriter.)]
-   (write-output w [0 2])
+   (write-output w [1 0])
    (str w))
- => (str "Case #1: 0\n"
-         "Case #2: 2"))
+ => (str "Case #1: 1\n"
+         "Case #2: 0"))
