@@ -1,9 +1,13 @@
 (ns codejam.saving-the-universe-test
   (:require [midje.sweet :refer :all]
             [codejam.saving-the-universe :refer :all]
-            [clojure.string :as str])
+            [clojure.string :as str]
+            [orchestra.spec.test :as st])
   (:import java.io.StringReader
            java.io.StringWriter))
+
+
+(st/instrument)
 
 
 (facts

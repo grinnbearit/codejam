@@ -5,4 +5,5 @@
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [swissknife "1.0.0"]
                  [clj-time "0.14.4"]]
-  :profiles {:dev {:dependencies [[midje "1.9.1"]]}})
+  :profiles {:dev {:dependencies [[midje "1.9.1"]
+                                  [orchestra "2017.11.12-1"]]}})
