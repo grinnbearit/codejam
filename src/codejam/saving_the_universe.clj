@@ -103,9 +103,3 @@
     (->> (map formatter (drop 1 (range)) solutions)
          (str/join "\n")
          (spit f))))
-
-
-(s/fdef write-output!
-        :args (s/cat ::f string?
-                     ::solutions (s/coll-of nat-int?))
-        :ret nil?)

@@ -80,7 +80,7 @@
  "write output"
 
  (let [w (java.io.StringWriter.)]
-   (write-output w [1 0])
+   (write-output! w [1 0])
    (str w))
  => (str "Case #1: 1\n"
          "Case #2: 0"))

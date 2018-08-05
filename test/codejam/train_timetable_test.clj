@@ -167,8 +167,8 @@
  "write output"
 
  (let [w (java.io.StringWriter.)]
-   (write-output w [[2 2]
-                    [2 0]])
+   (write-output! w [[2 2]
+                     [2 0]])
    (str w))
  => (str "Case #1: 2 2\n"
          "Case #2: 2 0"))
