@@ -1,5 +1,4 @@
--- src/Main.purs
-module Main where
+module SavingTheUniverse where
 
 import Prelude
 

@@ -1,5 +1,4 @@
--- test/Main.purs
-module Test.Main where
+module Test.SavingTheUniverse where
 
 import Prelude
 
@@ -8,7 +7,7 @@ import Data.List.Types (List)
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
 -- Import the functions and types we need to test
-import Main (Case(..), formatResults, parseInput, solveCase)
+import SavingTheUniverse (Case(..), formatResults, parseInput, solveCase)
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 import Test.Spec.Reporter.Console (consoleReporter)
@@ -23,7 +22,7 @@ spec :: Spec Unit
 spec = do
 
   -- NEW: Tests for parseInput
-  describe "Main.parseInput" do
+  describe "SavingTheUniverse.parseInput" do
 
     it "parses a simple case correctly" do
       -- Based on your parse-single-case test
@@ -70,7 +69,7 @@ spec = do
       parseInput input `shouldEqual` (Nothing :: Maybe (List Case))
 
   -- Tests for our core logic
-  describe "Main.solveCase" do
+  describe "SavingTheUniverse.solveCase" do
 
     it "solves sample case #1" do
       let
@@ -109,7 +108,7 @@ spec = do
       solveCase case4 `shouldEqual` 0
 
   -- Tests for formatResults
-  describe "Main.formatResults" do
+  describe "SavingTheUniverse.formatResults" do
 
     it "formats a single result" do
       -- Based on your format-case-result test
