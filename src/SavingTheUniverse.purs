@@ -55,7 +55,7 @@ parseInput input =
     go ls n = do
       { caseData, remaining } <- parseSingleCase ls
       remainingCases <- go remaining (n - 1)
-      pure (caseData : remainingCases)
+      pure $ caseData : remainingCases
 
   in
     do
@@ -116,21 +116,20 @@ solveCase (Case { engines, queries }) =
   in
     finalState.switches
 
--- | Formats a list of integer results into the "Case #X: Y" output string.
+
 formatResults :: Array Int -> String
 formatResults =
   let
-    formatLine :: Int -> Int -> String
-    formatLine idx result =
-      "Case #" <> show (idx + 1) <> ": " <> show result
+    formatResult :: Int -> Int -> String
+    formatResult idx result = "Case #" <> show (idx + 1) <> ": " <> show result
   in
-    (joinWith "\n") <<< (mapWithIndex formatLine)
+    joinWith "\n" <<< mapWithIndex formatResult
 
 
 parseFile :: String -> Effect (Maybe (List Case))
 parseFile path = do
   content <- readTextFile UTF8 path
-  pure (parseInput content)
+  pure $ parseInput content
 
 -- | The "point-free" definition of our solution pipeline.
 solve :: List Case -> String
